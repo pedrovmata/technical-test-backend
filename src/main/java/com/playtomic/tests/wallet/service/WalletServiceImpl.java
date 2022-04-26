@@ -27,36 +27,23 @@ public class WalletServiceImpl implements WalletService{
     private StripeService stripeService;
 
     @Autowired
-    CacheStore<Wallet> walletCache;
+    private LockService lockService;
 
     @Override
     @Transactional
     public void topUpWallet(long id,@NotNull  BigDecimal amount) {
         Wallet wallet = getWallet(id);
-        lockWallet(wallet);
+        lockService.lockWallet(wallet);
         wallet.updateBalance(amount);
         Payment payment = Optional.of(this.stripeService.charge(CREDIT_CARD_NUMBER, amount)).orElseThrow(() -> new StripeServiceException());
         //in order to implement the refund action we need to save the paymentId
         this.walletRepository.save(wallet);
         //uncomment next line to test concurrency error
         //Thread.sleep(30000);
-        unlockWallet(String.valueOf(wallet.getId()));
-    }
-
-    private void lockWallet(Wallet wallet) {
-        Wallet walletCached = this.walletCache.get(String.valueOf(wallet.getId()));
-        if(walletCached!=null){
-            throw new ConflictException();
-        }
-        walletCache.add(String.valueOf(wallet.getId()), wallet);
-        log.info("Record stored in cache with key " + String.valueOf(wallet.getId()));
+        lockService.unlockWallet(String.valueOf(wallet.getId()));
     }
 
 
-    private void unlockWallet(String  id) {
-        walletCache.delete(String.valueOf(id));
-        log.info("Record stored in cache with key " + String.valueOf(id));
-    }
 
     @Override
     public BigDecimal getBalance(long id) {
