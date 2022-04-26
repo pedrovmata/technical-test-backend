@@ -30,8 +30,8 @@ public class WalletServiceImpl implements WalletService{
     @Transactional
     public void topUpWallet(long id,@NotNull  BigDecimal amount) {
         Wallet wallet = getWallet(id);
-        lockService.lockWallet(wallet);
         wallet.updateBalance(amount);
+        lockService.lockWallet(wallet);
         Payment payment = Optional.of(this.stripeService.charge(CREDIT_CARD_NUMBER, amount)).orElseThrow(() -> new StripeServiceException());
         //in order to implement the refund action we need to save the paymentId
         this.walletRepository.save(wallet);

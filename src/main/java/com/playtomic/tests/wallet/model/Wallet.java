@@ -26,8 +26,8 @@ public class Wallet {
 
 
     public void updateBalance(@NotNull BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.valueOf(0)) < 0) {
-            throw new WalletException("Error amount incorrect", 1, "Error updating balance");
+        if (amount.compareTo(BigDecimal.valueOf(10)) < 0) {
+            throw new WalletException("Incorrect amount of money, please introduce an amount equal or greater than 10€ ", 1, "Error updating balance");
         }
         this.balance = this.balance.add(amount);
     }
