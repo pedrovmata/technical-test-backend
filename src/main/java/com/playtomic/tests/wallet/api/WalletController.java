@@ -1,6 +1,7 @@
 package com.playtomic.tests.wallet.api;
 
 import com.playtomic.tests.wallet.cache.CacheStore;
+import com.playtomic.tests.wallet.exception.ConflictException;
 import com.playtomic.tests.wallet.exception.WalletException;
 import com.playtomic.tests.wallet.model.Wallet;
 import com.playtomic.tests.wallet.service.WalletService;
@@ -19,8 +20,6 @@ public class WalletController {
 
     @Autowired
     private WalletService walletService;
-    @Autowired
-    private CacheStore<Wallet> cacheWallet;
 
     @RequestMapping("/")
     void log() {
@@ -28,17 +27,18 @@ public class WalletController {
     }
 
     @GetMapping(value = "/wallet/{id}/balance", produces = MediaTypes.HAL_JSON_VALUE)
-    public BigDecimal getBalance(@PathVariable("id") final long id){
+    public BigDecimal getBalance(@PathVariable("id") final long id) {
         return this.walletService.getBalance(id);
     }
 
     @PutMapping(value = "/wallet/{id}/balance/{amount}", produces = MediaTypes.HAL_JSON_VALUE)
     public HttpStatus topUpWallet(@PathVariable("id") final long id, @PathVariable("amount") final BigDecimal amount) {
-        Wallet walletCached = this.cacheWallet.get(String.valueOf(id));
-        if(walletCached!=null){
+        try {
+            this.walletService.topUpWallet(id, amount);
+        } catch (ConflictException e) {
             return HttpStatus.CONFLICT;
         }
-        this.walletService.topUpWallet(id,amount);
+
         return HttpStatus.OK;
     }
 

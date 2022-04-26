@@ -2,6 +2,7 @@ package com.playtomic.tests.wallet.model;
 
 import com.playtomic.tests.wallet.exception.WalletException;
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "wallet")
 public class Wallet {
@@ -23,10 +25,10 @@ public class Wallet {
     private BigDecimal balance;
 
 
-    public void updateBalance(@NotNull BigDecimal amount){
-        if(amount.compareTo(BigDecimal.valueOf(0))<0){
-            throw new WalletException("Error amount incorrect",1,"Error updating balance");
+    public void updateBalance(@NotNull BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.valueOf(0)) < 0) {
+            throw new WalletException("Error amount incorrect", 1, "Error updating balance");
         }
-        this.balance =this.balance.add(amount);
+        this.balance = this.balance.add(amount);
     }
 }
