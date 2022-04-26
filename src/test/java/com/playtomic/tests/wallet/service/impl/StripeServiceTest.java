@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
  *
  * How would you test this?
  *
+ * I would mock the service under test so I can abstract over the implementation
  */
 public class StripeServiceTest {
 

@@ -15,8 +15,4 @@ public class CacheStoreBeans {
         return new CacheStore<Wallet>(240, TimeUnit.SECONDS);
     }
 
-    @Bean
-    public CacheStore<BigDecimal> walletBalanceCache() {
-        return new CacheStore<BigDecimal>(1, TimeUnit.HOURS);
-    }
 }

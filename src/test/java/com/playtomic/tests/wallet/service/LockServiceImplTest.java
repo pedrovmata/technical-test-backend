@@ -27,15 +27,21 @@ class LockServiceImplTest {
 
     @Test
     void lockWallet_walletCached_throwConflictException() {
+        //Arrange
         Wallet wa = new  Wallet(1,new BigDecimal(20));
+        //Act
         when(cache.get("1")).thenReturn(new Wallet(1,new BigDecimal(20)));
+        //Asserts
         assertThrows(ConflictException.class,() -> sut.lockWallet(wa));
     }
 
     @Test
     void lockWallet_walletNotCached_endsOk() {
+        //Arrange
         Wallet wa = new  Wallet(1,new BigDecimal(20));
+        //Act
         when(cache.get("1")).thenReturn(null);
+        //Asserts
         sut.lockWallet(wa);
     }
 
