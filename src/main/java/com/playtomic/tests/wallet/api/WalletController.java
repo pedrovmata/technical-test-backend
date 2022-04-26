@@ -1,9 +1,6 @@
 package com.playtomic.tests.wallet.api;
 
-import com.playtomic.tests.wallet.cache.CacheStore;
 import com.playtomic.tests.wallet.exception.ConflictException;
-import com.playtomic.tests.wallet.exception.WalletException;
-import com.playtomic.tests.wallet.model.Wallet;
 import com.playtomic.tests.wallet.service.WalletService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

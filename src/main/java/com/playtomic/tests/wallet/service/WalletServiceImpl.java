@@ -1,14 +1,11 @@
 package com.playtomic.tests.wallet.service;
 
-import com.playtomic.tests.wallet.cache.CacheStore;
-import com.playtomic.tests.wallet.exception.ConflictException;
 import com.playtomic.tests.wallet.exception.WalletException;
 import com.playtomic.tests.wallet.model.Wallet;
 import com.playtomic.tests.wallet.repository.WalletRepository;
 import com.sun.istack.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

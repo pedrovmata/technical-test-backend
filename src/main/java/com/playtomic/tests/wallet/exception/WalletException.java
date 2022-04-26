@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 public class WalletException extends RuntimeException {
 
 
-    // ------------------------------------------------------------------------------------------------------------------
-    // ATTRIBUTES.
-    // ------------------------------------------------------------------------------------------------------------------
-    /**
+     /**
      * Application error code.
      */
     private final int applicationCode;
@@ -27,9 +24,6 @@ public class WalletException extends RuntimeException {
      */
     private HttpStatus status;
 
-    // ------------------------------------------------------------------------------------------------------------------
-    // CONSTRUCTORS.
-    // ------------------------------------------------------------------------------------------------------------------
 
     /**
      * Builds a com.playtomic.tests.wallet.model.WalletException with all the data received as parameters. It
@@ -41,8 +35,7 @@ public class WalletException extends RuntimeException {
      */
     public WalletException(final @NonNull String message, final int applicationCode, final String title) {
         super(message);
-/*        Preconditions.checkArgument(applicationCode >= 0, "error");
-        Preconditions.checkArgument(StringUtils.isNotBlank(title), "error");*/
+
         this.applicationCode = applicationCode;
         this.status = HttpStatus.NOT_FOUND;
         this.title = title;
