@@ -1,5 +1,6 @@
 package com.playtomic.tests.wallet.api;
 
+import com.playtomic.tests.wallet.cache.CacheStore;
 import com.playtomic.tests.wallet.exception.WalletException;
 import com.playtomic.tests.wallet.model.Wallet;
 import com.playtomic.tests.wallet.service.WalletService;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @RestController
 public class WalletController {
@@ -19,6 +19,8 @@ public class WalletController {
 
     @Autowired
     private WalletService walletService;
+    @Autowired
+    private CacheStore<Wallet> cacheWallet;
 
     @RequestMapping("/")
     void log() {
@@ -31,7 +33,11 @@ public class WalletController {
     }
 
     @PutMapping(value = "/wallet/{id}/balance/{amount}", produces = MediaTypes.HAL_JSON_VALUE)
-    public HttpStatus topUpWallet(@PathVariable("id") final long id, @PathVariable("amount") final BigDecimal amount){
+    public HttpStatus topUpWallet(@PathVariable("id") final long id, @PathVariable("amount") final BigDecimal amount) {
+        Wallet walletCached = this.cacheWallet.get(String.valueOf(id));
+        if(walletCached!=null){
+            return HttpStatus.CONFLICT;
+        }
         this.walletService.topUpWallet(id,amount);
         return HttpStatus.OK;
     }

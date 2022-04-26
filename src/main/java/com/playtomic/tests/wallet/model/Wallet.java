@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class Wallet {
 
     @Id
-    private Long id;
+    private long id;
 
     @NotNull
     private BigDecimal balance;

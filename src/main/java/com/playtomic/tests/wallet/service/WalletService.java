@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public interface WalletService {
 
-    void topUpWallet(Long id, BigDecimal amount);
+    void topUpWallet(long id, BigDecimal amount);
 
-    BigDecimal getBalance(Long id);
+    BigDecimal getBalance(long id);
 }
