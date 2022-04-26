@@ -26,7 +26,7 @@ public class LockServiceImpl implements LockService {
 
     @Override
     public void unlockWallet(String  id) {
-        walletCache.delete(String.valueOf(id));
+        walletCache.delete(id);
         log.info("Record stored in cache with key " + String.valueOf(id));
     }
 }
