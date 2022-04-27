@@ -10,11 +10,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @Service
 @Slf4j
-public class WalletServiceImpl implements WalletService{
+public class WalletServiceImpl implements WalletService {
 
     public static final String CREDIT_CARD_NUMBER = "4111111111111111";
     @Autowired
@@ -28,27 +27,34 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     @Transactional
-    public void topUpWallet(long id,@NotNull  BigDecimal amount) {
+    public void topUpWallet(long id, @NotNull BigDecimal amount) {
         Wallet wallet = getWallet(id);
-        wallet.updateBalance(amount);
         lockService.lockWallet(wallet);
-        Payment payment = Optional.of(this.stripeService.charge(CREDIT_CARD_NUMBER, amount)).orElseThrow(() -> new StripeServiceException());
-        //in order to implement the refund action we need to save the paymentId
+        try {
+            update(amount, wallet);
+        } catch (Exception e) {
+            throw new WalletException(e.getMessage(), 1, "Error");
+        } finally {
+            lockService.unlockWallet(String.valueOf(id));
+        }
+
+    }
+
+    private void update(BigDecimal amount, Wallet wallet)  {
+        wallet.updateBalance(amount);
+        this.stripeService.charge(CREDIT_CARD_NUMBER, amount);
         this.walletRepository.save(wallet);
         //uncomment next line to test concurrency error
         //Thread.sleep(30000);
-        lockService.unlockWallet(String.valueOf(wallet.getId()));
     }
-
 
 
     @Override
     public BigDecimal getBalance(long id) {
-        Wallet wallet = getWallet(id);
-        return wallet.getBalance();
+        return getWallet(id).getBalance();
     }
 
     private Wallet getWallet(Long id) {
-        return this.walletRepository.findById(id).orElseThrow(() -> new WalletException("Wallet nof found",1,"Wallet error"));
+        return this.walletRepository.findById(id).orElseThrow(() -> new WalletException("Wallet nof found", 1, "Wallet error"));
     }
 }

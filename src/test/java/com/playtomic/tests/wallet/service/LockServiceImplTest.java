@@ -1,7 +1,7 @@
 package com.playtomic.tests.wallet.service;
 
 import com.playtomic.tests.wallet.cache.CacheStore;
-import com.playtomic.tests.wallet.exception.ConflictException;
+import com.playtomic.tests.wallet.exception.WalletException;
 import com.playtomic.tests.wallet.model.Wallet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -28,21 +28,21 @@ class LockServiceImplTest {
     @Test
     void lockWallet_walletCached_throwConflictException() {
         //Arrange
-        Wallet wa = new  Wallet(1,new BigDecimal(20));
-        //Act
-        when(cache.get("1")).thenReturn(new Wallet(1,new BigDecimal(20)));
+        Wallet wallet = new Wallet(1,new BigDecimal(20));
+        //When
+        when(cache.get("1")).thenReturn(wallet);
         //Asserts
-        assertThrows(ConflictException.class,() -> sut.lockWallet(wa));
+        assertThrows(WalletException.class,() -> sut.lockWallet(wallet));
     }
 
     @Test
     void lockWallet_walletNotCached_endsOk() {
         //Arrange
-        Wallet wa = new  Wallet(1,new BigDecimal(20));
-        //Act
+        Wallet wallet = new Wallet(1,new BigDecimal(20));
+        //When
         when(cache.get("1")).thenReturn(null);
         //Asserts
-        sut.lockWallet(wa);
+        sut.lockWallet(wallet);
     }
 
 
